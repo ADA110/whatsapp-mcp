@@ -260,28 +260,6 @@ create_config_files() {
         UV_PATH="$HOME/.cargo/bin/uv"
     fi
     
-    # Create Claude Desktop configuration
-    CLAUDE_CONFIG_DIR="$HOME/Library/Application Support/Claude"
-    if [[ ! -d "$CLAUDE_CONFIG_DIR" ]]; then
-        mkdir -p "$CLAUDE_CONFIG_DIR"
-    fi
-    
-    cat > "$CLAUDE_CONFIG_DIR/claude_desktop_config.json" << EOF
-{
-  "mcpServers": {
-    "whatsapp": {
-      "command": "$UV_PATH",
-      "args": [
-        "--directory",
-        "$SCRIPT_DIR/whatsapp-mcp-server",
-        "run",
-        "main.py"
-      ]
-    }
-  }
-}
-EOF
-    
     # Create Cursor configuration
     CURSOR_CONFIG_DIR="$HOME/.cursor"
     if [[ ! -d "$CURSOR_CONFIG_DIR" ]]; then
@@ -304,8 +282,7 @@ EOF
 }
 EOF
     
-    print_success "Configuration files created"
-    print_status "Claude Desktop config: $CLAUDE_CONFIG_DIR/claude_desktop_config.json"
+    print_success "Configuration file created"
     print_status "Cursor config: $CURSOR_CONFIG_DIR/mcp.json"
 }
 
@@ -390,7 +367,7 @@ main() {
     echo "1. Start the WhatsApp Bridge: ./start_whatsapp_bridge.sh"
     echo "2. Scan the QR code with your WhatsApp mobile app"
     echo "3. Start the MCP Server: ./start_mcp_server.sh"
-    echo "4. Restart Claude Desktop or Cursor"
+    echo "4. Restart Cursor"
     echo "5. You should now see WhatsApp as an available integration"
     echo ""
     echo "For troubleshooting, see the README.md file"

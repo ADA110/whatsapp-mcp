@@ -71,13 +71,9 @@ You'll see a QR code in the terminal. **Scan this QR code with your WhatsApp mob
 ./start_mcp_server.sh
 ```
 
-### Step 3: Configure Claude Desktop or Cursor
+### Step 3: Configure Cursor
 
-The installer automatically creates configuration files, but you may need to restart your AI assistant.
-
-**For Claude Desktop:**
-- Restart Claude Desktop
-- You should see WhatsApp as an available integration
+The installer automatically creates the configuration file, but you may need to restart Cursor.
 
 **For Cursor:**
 - Restart Cursor
@@ -134,7 +130,7 @@ Once everything is working, you can:
 
 ### Example Usage
 
-Ask Claude or Cursor things like:
+Ask Cursor things like:
 - "Show me my recent messages with John"
 - "Send a message to +1234567890 saying 'Hello!'"
 - "Find all messages containing 'meeting' from last week"

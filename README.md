@@ -20,7 +20,12 @@ Here's an example of what you can do when it's connected to Claude.
 
 For the easiest setup, use our automated installer:
 
-**macOS and Linux:**
+**Prerequisites:**
+- macOS or Linux
+- Cursor IDE
+- All other dependencies will be installed automatically
+
+**Installation:**
 ```bash
 git clone https://github.com/ADA110/whatsapp-mcp.git
 cd whatsapp-mcp
@@ -55,7 +60,7 @@ If you prefer to install manually or the automated installer doesn't work:
 ### Prerequisites
 
 - macOS or Linux
-- Anthropic Claude Desktop app (or Cursor)
+- Cursor IDE
 - All other dependencies will be installed automatically by the installer
 
 ### Steps
@@ -100,23 +105,15 @@ If you prefer to install manually or the automated installer doesn't work:
    }
    ```
 
-   For **Claude**, save this as `claude_desktop_config.json` in your Claude Desktop configuration directory at:
-
-   ```
-   ~/Library/Application Support/Claude/claude_desktop_config.json
-   ```
-
-   For **Cursor**, save this as `mcp.json` in your Cursor configuration directory at:
+   Save this as `mcp.json` in your Cursor configuration directory at:
 
    ```
    ~/.cursor/mcp.json
    ```
 
-4. **Restart Claude Desktop / Cursor**
+4. **Restart Cursor**
 
-   Open Claude Desktop and you should now see WhatsApp as an available integration.
-
-   Or restart Cursor.
+   Restart Cursor and you should now see WhatsApp as an available integration.
 
 
 ## Architecture Overview
@@ -125,7 +122,7 @@ This application consists of two main components:
 
 1. **Go WhatsApp Bridge** (`whatsapp-bridge/`): A Go application that connects to WhatsApp's web API, handles authentication via QR code, and stores message history in SQLite. It serves as the bridge between WhatsApp and the MCP server.
 
-2. **Python MCP Server** (`whatsapp-mcp-server/`): A Python server implementing the Model Context Protocol (MCP), which provides standardized tools for Claude to interact with WhatsApp data and send/receive messages.
+2. **Python MCP Server** (`whatsapp-mcp-server/`): A Python server implementing the Model Context Protocol (MCP), which provides standardized tools for Cursor to interact with WhatsApp data and send/receive messages.
 
 ### Data Storage
 
@@ -135,11 +132,11 @@ This application consists of two main components:
 
 ## Usage
 
-Once connected, you can interact with your WhatsApp contacts through Claude, leveraging Claude's AI capabilities in your WhatsApp conversations.
+Once connected, you can interact with your WhatsApp contacts through Cursor, leveraging Cursor's AI capabilities in your WhatsApp conversations.
 
 ### MCP Tools
 
-Claude can access the following tools to interact with WhatsApp:
+Cursor can access the following tools to interact with WhatsApp:
 
 - **search_contacts**: Search for contacts by name or phone number
 - **list_messages**: Retrieve messages with optional filters and context
@@ -173,11 +170,11 @@ By default, just the metadata of the media is stored in the local database. The 
 
 ## Technical Details
 
-1. Claude sends requests to the Python MCP server
+1. Cursor sends requests to the Python MCP server
 2. The MCP server queries the Go bridge for WhatsApp data or directly to the SQLite database
 3. The Go accesses the WhatsApp API and keeps the SQLite database up to date
-4. Data flows back through the chain to Claude
-5. When sending messages, the request flows from Claude through the MCP server to the Go bridge and to WhatsApp
+4. Data flows back through the chain to Cursor
+5. When sending messages, the request flows from Cursor through the MCP server to the Go bridge and to WhatsApp
 
 ## Troubleshooting
 
