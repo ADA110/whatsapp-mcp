@@ -108,20 +108,6 @@ start_mcp() {
     fi
 }
 
-# Function to stop all services
-stop_all() {
-    print_status "Stopping all services..."
-    
-    if is_bridge_running; then
-        pkill -f "whatsapp-bridge.*main" && print_success "WhatsApp Bridge stopped"
-    fi
-    
-    if is_mcp_running; then
-        pkill -f "whatsapp-mcp-server.*main.py" && print_success "MCP Server stopped"
-    fi
-    
-    print_success "All services stopped"
-}
 
 # Function to force kill all processes
 force_kill_all() {
@@ -229,13 +215,12 @@ show_menu() {
     echo "1. Start WhatsApp Bridge"
     echo "2. Start MCP Server"
     echo "3. Start Both Services"
-    echo "4. Stop All Services"
-    echo "5. Force Kill All Processes"
-    echo "6. Show Status"
-    echo "7. Show QR Code"
-    echo "8. Show Logs"
-    echo "9. Install/Update Dependencies"
-    echo "10. Exit"
+    echo "4. Force Kill All Processes"
+    echo "5. Show Status"
+    echo "6. Show QR Code"
+    echo "7. Show Logs"
+    echo "8. Install/Update Dependencies"
+    echo "9. Exit"
     echo ""
 }
 
@@ -253,34 +238,30 @@ main() {
                 start_mcp
                 ;;
             3)
-                start_bridge
-                start_mcp
+                start_both
                 ;;
             4)
-                stop_all
-                ;;
-            5)
                 force_kill_all
                 ;;
-            6)
+            5)
                 show_status
                 ;;
-            7)
+            6)
                 show_qr_code
                 ;;
-            8)
+            7)
                 show_logs
                 ;;
-            9)
+            8)
                 print_status "Running installation script..."
                 ./install.sh
                 ;;
-            10)
+            9)
                 print_status "Goodbye!"
                 exit 0
                 ;;
             *)
-                print_error "Invalid option. Please choose 1-10."
+                print_error "Invalid option. Please choose 1-9."
                 ;;
         esac
         

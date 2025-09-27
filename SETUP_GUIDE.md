@@ -2,26 +2,28 @@
 
 This guide will help you set up the WhatsApp MCP Server quickly and easily, even if you're not familiar with coding.
 
-## 🚀 Quick Start (Automated Installation)
+## 🚀 Quick Start (One-Step Setup)
 
 ### For macOS and Linux Users
 
-1. **Open Terminal** and run:
+1. **Clone the repository**:
    ```bash
-   chmod +x install.sh
-   ./install.sh
+   git clone https://github.com/ADA110/whatsapp-mcp.git
+   cd whatsapp-mcp
    ```
 
-2. **Follow the prompts** - the script will automatically install all dependencies
+2. **Run the launcher and install**:
+   ```bash
+   chmod +x launch.sh
+   ./launch.sh
+   ```
 
-3. **Start the services**:
-   ```bash
-   ./start_whatsapp_bridge.sh
-   ```
-   Then in another terminal:
-   ```bash
-   ./start_mcp_server.sh
-   ```
+3. **Select option 8** (Install/Update Dependencies) from the menu
+
+4. **Start the services** using the launcher:
+   - Option 1: Start WhatsApp Bridge
+   - Option 2: Start MCP Server
+   - Option 3: Start Both Services
 
 
 ## 📋 What Gets Installed

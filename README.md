@@ -25,13 +25,21 @@ For the easiest setup, use our automated installer:
 - Cursor IDE
 - All other dependencies will be installed automatically
 
-**Installation:**
+**One-Step Setup:**
 ```bash
 git clone https://github.com/ADA110/whatsapp-mcp.git
 cd whatsapp-mcp
-chmod +x install.sh
-./install.sh
+chmod +x launch.sh
+./launch.sh
 ```
+
+**Menu Options (in order):**
+1. **First time setup**: Select option **8** (Install/Update Dependencies)
+2. **Start WhatsApp Bridge**: Select option **1** (Start WhatsApp Bridge) - scan QR code when prompted
+3. **Start MCP Server**: Select option **2** (Start MCP Server) - in a new terminal or after bridge is running
+4. **Daily usage**: Select option **3** (Start Both Services) to run everything at once
+5. **Stop services**: Select option **4** (Force Kill All Processes) - most reliable way to stop
+6. **Troubleshooting**: Select option **5** (Show Status) if you get "service is running" message
 
 The installer will automatically:
 - Install Homebrew (on macOS) if not already installed
@@ -42,16 +50,41 @@ The installer will automatically:
 
 ### Easy Launcher
 
-After installation, use the launcher for a simple menu:
+Use the launcher for all operations:
 
 **macOS and Linux:**
 ```bash
 ./launch.sh
 ```
 
-## 📖 Detailed Setup Guide
+**Complete Workflow:**
 
-For a comprehensive, step-by-step guide with troubleshooting tips, see [SETUP_GUIDE.md](SETUP_GUIDE.md).
+1. **Initial Setup** (one-time):
+   - Run `./launch.sh`
+   - Select option **8** (Install/Update Dependencies)
+   - Wait for installation to complete
+   - Exit the launcher
+
+2. **First Time Connection**:
+   - Run `./launch.sh` again
+   - Select option **1** (Start WhatsApp Bridge)
+   - Scan the QR code with your WhatsApp mobile app
+   - Wait for "Connected" message
+   - Press Ctrl+C to stop the bridge
+
+3. **Start Services** (daily usage):
+   - Run `./launch.sh`
+   - Select option **3** (Start Both Services)
+   - Both WhatsApp Bridge and MCP Server will start
+   - Keep this terminal open while using WhatsApp features
+
+4. **Stop Services**:
+   - In the launcher, select option **4** (Force Kill All Processes)
+   - Or press Ctrl+C in the terminal where services are running
+
+5. **Troubleshooting**:
+   - If you get "service is running" message, select option **5** (Show Status) to check what's actually running
+   - Use option **4** (Force Kill All Processes) to stop any stuck services
 
 ## 📋 Manual Installation
 
@@ -114,6 +147,11 @@ If you prefer to install manually or the automated installer doesn't work:
 4. **Restart Cursor**
 
    Restart Cursor and you should now see WhatsApp as an available integration.
+
+## 📖 Detailed Setup Guide
+
+For a comprehensive, step-by-step guide with troubleshooting tips, see [SETUP_GUIDE.md](SETUP_GUIDE.md).
+
 
 
 ## Architecture Overview
