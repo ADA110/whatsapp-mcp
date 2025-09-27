@@ -22,8 +22,16 @@ For the easiest setup, use our automated installer:
 
 **Prerequisites:**
 - macOS or Linux
+- Git (for cloning the repository)
 - Cursor IDE
 - All other dependencies will be installed automatically
+
+**Installing Git:**
+- **macOS**: Git comes pre-installed, or install via [Homebrew](https://brew.sh/): `brew install git`
+- **Linux**: Install via package manager:
+  - Ubuntu/Debian: `sudo apt update && sudo apt install git`
+  - CentOS/RHEL: `sudo yum install git` or `sudo dnf install git`
+  - Arch Linux: `sudo pacman -S git`
 
 **One-Step Setup:**
 ```bash
@@ -93,8 +101,16 @@ If you prefer to install manually or the automated installer doesn't work:
 ### Prerequisites
 
 - macOS or Linux
+- Git (for cloning the repository)
 - Cursor IDE
 - All other dependencies will be installed automatically by the installer
+
+**Installing Git:**
+- **macOS**: Git comes pre-installed, or install via [Homebrew](https://brew.sh/): `brew install git`
+- **Linux**: Install via package manager:
+  - Ubuntu/Debian: `sudo apt update && sudo apt install git`
+  - CentOS/RHEL: `sudo yum install git` or `sudo dnf install git`
+  - Arch Linux: `sudo pacman -S git`
 
 ### Steps
 
@@ -217,6 +233,11 @@ By default, just the metadata of the media is stored in the local database. The 
 ## Troubleshooting
 
 - If you encounter permission issues when running uv, you may need to add it to your PATH or use the full path to the executable.
+- **UV Installation Failed**: If the automated UV installation fails, try installing it manually:
+  ```bash
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+  Then restart your terminal or run `source ~/.cargo/env` to add UV to your PATH.
 - Make sure both the Go application and the Python server are running for the integration to work properly.
 
 ### Authentication Issues
