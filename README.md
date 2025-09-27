@@ -28,22 +28,9 @@ chmod +x install.sh
 ./install.sh
 ```
 
-**Windows:**
-```cmd
-git clone https://github.com/lharries/whatsapp-mcp.git
-cd whatsapp-mcp
-install.bat
-```
-
-**Windows PowerShell:**
-```powershell
-git clone https://github.com/lharries/whatsapp-mcp.git
-cd whatsapp-mcp
-.\install.ps1
-```
-
 The installer will automatically:
-- Install all required dependencies (Go, Python, UV, FFmpeg)
+- Install Homebrew (on macOS) if not already installed
+- Install all required dependencies (Go, Python, UV)
 - Set up the project
 - Create configuration files
 - Generate startup scripts
@@ -57,11 +44,6 @@ After installation, use the launcher for a simple menu:
 ./launch.sh
 ```
 
-**Windows:**
-```cmd
-launch.bat
-```
-
 ## 📖 Detailed Setup Guide
 
 For a comprehensive, step-by-step guide with troubleshooting tips, see [SETUP_GUIDE.md](SETUP_GUIDE.md).
@@ -72,11 +54,9 @@ If you prefer to install manually or the automated installer doesn't work:
 
 ### Prerequisites
 
-- Go
-- Python 3.11+
+- macOS or Linux
 - Anthropic Claude Desktop app (or Cursor)
-- UV (Python package manager), install with `curl -LsSf https://astral.sh/uv/install.sh | sh`
-- FFmpeg (_optional_) - Only needed for audio messages. If you want to send audio files as playable WhatsApp voice messages, they must be in `.ogg` Opus format. With FFmpeg installed, the MCP server will automatically convert non-Opus audio files. Without FFmpeg, you can still send raw audio files using the `send_file` tool.
+- All other dependencies will be installed automatically by the installer
 
 ### Steps
 
@@ -138,27 +118,6 @@ If you prefer to install manually or the automated installer doesn't work:
 
    Or restart Cursor.
 
-### Windows Compatibility
-
-If you're running this project on Windows, be aware that `go-sqlite3` requires **CGO to be enabled** in order to compile and work properly. By default, **CGO is disabled on Windows**, so you need to explicitly enable it and have a C compiler installed.
-
-#### Steps to get it working:
-
-1. **Install a C compiler**  
-   We recommend using [MSYS2](https://www.msys2.org/) to install a C compiler for Windows. After installing MSYS2, make sure to add the `ucrt64\bin` folder to your `PATH`.  
-   → A step-by-step guide is available [here](https://code.visualstudio.com/docs/cpp/config-mingw).
-
-2. **Enable CGO and run the app**
-
-   ```bash
-   cd whatsapp-bridge
-   go env -w CGO_ENABLED=1
-   go run main.go
-   ```
-
-Without this setup, you'll likely run into errors like:
-
-> `Binary was compiled with 'CGO_ENABLED=0', go-sqlite3 requires cgo to work.`
 
 ## Architecture Overview
 
@@ -192,7 +151,7 @@ Claude can access the following tools to interact with WhatsApp:
 - **get_message_context**: Retrieve context around a specific message
 - **send_message**: Send a WhatsApp message to a specified phone number or group JID
 - **send_file**: Send a file (image, video, raw audio, document) to a specified recipient
-- **send_audio_message**: Send an audio file as a WhatsApp voice message (requires the file to be an .ogg opus file or ffmpeg must be installed)
+- **send_audio_message**: Send an audio file as a WhatsApp voice message (requires the file to be an .ogg opus file)
 - **download_media**: Download media from a WhatsApp message and get the local file path
 
 ### Media Handling Features
@@ -205,9 +164,8 @@ You can send various media types to your WhatsApp contacts:
 
 - **Images, Videos, Documents**: Use the `send_file` tool to share any supported media type.
 - **Voice Messages**: Use the `send_audio_message` tool to send audio files as playable WhatsApp voice messages.
-  - For optimal compatibility, audio files should be in `.ogg` Opus format.
-  - With FFmpeg installed, the system will automatically convert other audio formats (MP3, WAV, etc.) to the required format.
-  - Without FFmpeg, you can still send raw audio files using the `send_file` tool, but they won't appear as playable voice messages.
+  - Audio files must be in `.ogg` Opus format to work as voice messages.
+  - You can also send raw audio files using the `send_file` tool, but they won't appear as playable voice messages.
 
 #### Media Downloading
 

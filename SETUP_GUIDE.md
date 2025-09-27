@@ -23,75 +23,52 @@ This guide will help you set up the WhatsApp MCP Server quickly and easily, even
    ./start_mcp_server.sh
    ```
 
-### For Windows Users
-
-**Option 1: PowerShell (Recommended)**
-1. **Open PowerShell as Administrator**
-2. **Run**:
-   ```powershell
-   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-   .\install.ps1
-   ```
-
-**Option 2: Command Prompt**
-1. **Open Command Prompt**
-2. **Run**:
-   ```cmd
-   install.bat
-   ```
-
-3. **Start the services** by double-clicking:
-   - `start_whatsapp_bridge.bat`
-   - `start_mcp_server.bat`
 
 ## 📋 What Gets Installed
 
 The automated installer will install:
 
+- **Homebrew** (on macOS, if not already installed)
 - **Go** (programming language for the WhatsApp bridge)
 - **Python 3.11+** (programming language for the MCP server)
 - **UV** (Python package manager)
 - **Git** (version control system)
-- **FFmpeg** (optional, for audio conversion)
 
 ## 🔧 Manual Installation (If Automated Fails)
 
 If the automated installation doesn't work, you can install dependencies manually:
 
-### 1. Install Go
+### 1. Install Homebrew (macOS only)
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+### 2. Install Go
 - **macOS**: `brew install go`
 - **Linux**: Download from [golang.org](https://golang.org/dl/)
-- **Windows**: Download from [golang.org](https://golang.org/dl/)
 
-### 2. Install Python 3.11+
+### 3. Install Python 3.11+
 - **macOS**: `brew install python@3.11`
 - **Linux**: `sudo apt install python3.11 python3.11-venv python3.11-pip`
-- **Windows**: Download from [python.org](https://www.python.org/downloads/)
 
-### 3. Install UV
+### 4. Install UV
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### 4. Install FFmpeg (Optional)
-- **macOS**: `brew install ffmpeg`
-- **Linux**: `sudo apt install ffmpeg`
-- **Windows**: Download from [ffmpeg.org](https://ffmpeg.org/downloads/)
 
 ## 🎯 After Installation
 
 ### Step 1: Start the WhatsApp Bridge
 ```bash
-./start_whatsapp_bridge.sh  # macOS/Linux
-# OR double-click start_whatsapp_bridge.bat  # Windows
+./start_whatsapp_bridge.sh
 ```
 
 You'll see a QR code in the terminal. **Scan this QR code with your WhatsApp mobile app** to authenticate.
 
 ### Step 2: Start the MCP Server
 ```bash
-./start_mcp_server.sh  # macOS/Linux
-# OR double-click start_mcp_server.bat  # Windows
+./start_mcp_server.sh
 ```
 
 ### Step 3: Configure Claude Desktop or Cursor
@@ -126,9 +103,6 @@ The installer automatically creates configuration files, but you may need to res
 - Make sure you have Python 3.11 or higher
 - Check with: `python3 --version`
 
-**5. Go build errors on Windows**
-- Make sure CGO is enabled: `go env -w CGO_ENABLED=1`
-- Install a C compiler (like MSYS2)
 
 ### Getting Help
 

@@ -40,10 +40,46 @@ detect_os() {
         echo "linux"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         echo "macos"
-    elif [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
-        echo "windows"
     else
         echo "unknown"
+    fi
+}
+
+# Function to install Homebrew
+install_homebrew() {
+    if command_exists brew; then
+        BREW_VERSION=$(brew --version | head -n1 | cut -d' ' -f2)
+        print_success "Homebrew is already installed (version: $BREW_VERSION)"
+        return 0
+    fi
+
+    print_status "Installing Homebrew..."
+    
+    # Install Homebrew using the official installer
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    
+    # Add Homebrew to PATH for current session
+    if [[ -f "/opt/homebrew/bin/brew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -f "/usr/local/bin/brew" ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
+    
+    # Add Homebrew to PATH permanently
+    if [[ -f "/opt/homebrew/bin/brew" ]]; then
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bash_profile
+    elif [[ -f "/usr/local/bin/brew" ]]; then
+        echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+        echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.bash_profile
+    fi
+    
+    # Verify installation
+    if command_exists brew; then
+        print_success "Homebrew installed successfully"
+    else
+        print_error "Homebrew installation failed. Please install manually: https://brew.sh/"
+        exit 1
     fi
 }
 
@@ -71,16 +107,10 @@ install_go() {
             ;;
         "macos")
             # Install Go for macOS using Homebrew
-            if command_exists brew; then
-                brew install go
-            else
-                print_error "Homebrew not found. Please install Homebrew first: https://brew.sh/"
-                exit 1
+            if ! command_exists brew; then
+                install_homebrew
             fi
-            ;;
-        "windows")
-            print_error "Windows installation not supported in this script. Please install Go manually from https://golang.org/dl/"
-            exit 1
+            brew install go
             ;;
         *)
             print_error "Unsupported operating system: $OSTYPE"
@@ -118,16 +148,10 @@ install_python() {
             ;;
         "macos")
             # Install Python for macOS using Homebrew
-            if command_exists brew; then
-                brew install python@3.11
-            else
-                print_error "Homebrew not found. Please install Homebrew first: https://brew.sh/"
-                exit 1
+            if ! command_exists brew; then
+                install_homebrew
             fi
-            ;;
-        "windows")
-            print_error "Windows installation not supported in this script. Please install Python 3.11+ manually from https://www.python.org/downloads/"
-            exit 1
+            brew install python@3.11
             ;;
         *)
             print_error "Unsupported operating system: $OSTYPE"
@@ -165,42 +189,6 @@ install_uv() {
     fi
 }
 
-# Function to install FFmpeg
-install_ffmpeg() {
-    if command_exists ffmpeg; then
-        FFMPEG_VERSION=$(ffmpeg -version | head -n1 | cut -d' ' -f3)
-        print_success "FFmpeg is already installed (version: $FFMPEG_VERSION)"
-        return 0
-    fi
-
-    print_status "Installing FFmpeg (optional, for audio conversion)..."
-    
-    OS=$(detect_os)
-    case $OS in
-        "linux")
-            sudo apt-get update
-            sudo apt-get install -y ffmpeg
-            ;;
-        "macos")
-            if command_exists brew; then
-                brew install ffmpeg
-            else
-                print_warning "Homebrew not found. Please install FFmpeg manually: https://ffmpeg.org/download.html"
-                return 0
-            fi
-            ;;
-        "windows")
-            print_warning "Please install FFmpeg manually from https://ffmpeg.org/download.html"
-            return 0
-            ;;
-        *)
-            print_warning "Please install FFmpeg manually for your operating system"
-            return 0
-            ;;
-    esac
-    
-    print_success "FFmpeg installed successfully"
-}
 
 # Function to install Git
 install_git() {
@@ -219,16 +207,10 @@ install_git() {
             sudo apt-get install -y git
             ;;
         "macos")
-            if command_exists brew; then
-                brew install git
-            else
-                print_error "Homebrew not found. Please install Git manually: https://git-scm.com/downloads"
-                exit 1
+            if ! command_exists brew; then
+                install_homebrew
             fi
-            ;;
-        "windows")
-            print_error "Please install Git manually from https://git-scm.com/downloads"
-            exit 1
+            brew install git
             ;;
         *)
             print_error "Please install Git manually for your operating system"
@@ -389,7 +371,6 @@ main() {
     install_go
     install_python
     install_uv
-    install_ffmpeg
     
     # Setup project
     setup_project

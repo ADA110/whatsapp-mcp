@@ -7,14 +7,10 @@ I've created a comprehensive automated installation system that makes the WhatsA
 ### 📁 New Files Created
 
 1. **`install.sh`** - Automated installation script for macOS and Linux
-2. **`install.bat`** - Automated installation script for Windows Command Prompt
-3. **`install.ps1`** - Automated installation script for Windows PowerShell
-4. **`launch.sh`** - Easy launcher with menu for macOS and Linux
-5. **`launch.bat`** - Easy launcher with menu for Windows
-6. **`test_installation.sh`** - Installation test script for macOS and Linux
-7. **`test_installation.bat`** - Installation test script for Windows
-8. **`SETUP_GUIDE.md`** - Comprehensive user-friendly setup guide
-9. **`INSTALLATION_SUMMARY.md`** - This summary document
+2. **`launch.sh`** - Easy launcher with menu for macOS and Linux
+3. **`test_installation.sh`** - Installation test script for macOS and Linux
+4. **`SETUP_GUIDE.md`** - Comprehensive user-friendly setup guide
+5. **`INSTALLATION_SUMMARY.md`** - This summary document
 
 ### 📝 Updated Files
 
@@ -26,13 +22,13 @@ I've created a comprehensive automated installation system that makes the WhatsA
 
 The installation scripts automatically:
 
-1. **Detect the operating system** (macOS, Linux, Windows)
-2. **Install all required dependencies**:
+1. **Detect the operating system** (macOS, Linux)
+2. **Install Homebrew** (on macOS, if not already installed)
+3. **Install all required dependencies**:
    - Go (programming language)
    - Python 3.11+ (programming language)
    - UV (Python package manager)
    - Git (version control)
-   - FFmpeg (optional, for audio conversion)
 3. **Set up the project**:
    - Install Go dependencies
    - Install Python dependencies
@@ -77,9 +73,8 @@ The launcher provides a simple menu interface:
 
 ### Cross-Platform Support
 
-- **macOS**: Uses Homebrew for package management
+- **macOS**: Uses Homebrew for package management (auto-installed if needed)
 - **Linux**: Uses apt-get for package management
-- **Windows**: Provides both Command Prompt and PowerShell versions
 
 ### Error Handling
 
@@ -173,18 +168,6 @@ chmod +x install.sh
 ./launch.sh
 ```
 
-### Windows
-```cmd
-# Clone the repository
-git clone https://github.com/lharries/whatsapp-mcp.git
-cd whatsapp-mcp
-
-# Run the installer
-install.bat
-
-# Use the launcher
-launch.bat
-```
 
 ## 📈 Future Enhancements
 

@@ -205,12 +205,12 @@ def send_file(recipient: str, media_path: str) -> Dict[str, Any]:
 
 @mcp.tool()
 def send_audio_message(recipient: str, media_path: str) -> Dict[str, Any]:
-    """Send any audio file as a WhatsApp audio message to the specified recipient. For group messages use the JID. If it errors due to ffmpeg not being installed, use send_file instead.
+    """Send an audio file as a WhatsApp voice message to the specified recipient. For group messages use the JID.
     
     Args:
         recipient: The recipient - either a phone number with country code but no + or other symbols,
                  or a JID (e.g., "123456789@s.whatsapp.net" or a group JID like "123456789@g.us")
-        media_path: The absolute path to the audio file to send (will be converted to Opus .ogg if it's not a .ogg file)
+        media_path: The absolute path to the audio file to send (must be in .ogg Opus format)
     
     Returns:
         A dictionary containing success status and a status message

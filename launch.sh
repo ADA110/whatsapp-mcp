@@ -34,9 +34,19 @@ is_running() {
     pgrep -f "$1" > /dev/null 2>&1
 }
 
+# Function to check if WhatsApp Bridge is running
+is_bridge_running() {
+    pgrep -f "whatsapp-bridge.*main" > /dev/null 2>&1 || pgrep -f "./main" > /dev/null 2>&1
+}
+
+# Function to check if MCP Server is running
+is_mcp_running() {
+    pgrep -f "whatsapp-mcp-server.*main.py" > /dev/null 2>&1 || pgrep -f "uv run main.py" > /dev/null 2>&1
+}
+
 # Function to start WhatsApp Bridge
 start_bridge() {
-    if is_running "main"; then
+    if is_bridge_running; then
         print_warning "WhatsApp Bridge is already running"
         return 0
     fi
@@ -47,9 +57,29 @@ start_bridge() {
     cd ..
     
     sleep 2
-    if is_running "main"; then
+    if is_bridge_running; then
         print_success "WhatsApp Bridge started successfully"
-        print_status "Check bridge.log for QR code and status"
+        print_status "Waiting for QR code..."
+        
+        # Wait a bit more for QR code to be generated
+        sleep 3
+        
+        # Show QR code from log file
+        if [[ -f "bridge.log" ]]; then
+            echo ""
+            echo "=========================================="
+            echo "WHATSAPP QR CODE - SCAN WITH YOUR PHONE"
+            echo "=========================================="
+            echo ""
+            # Extract QR code from log file
+            awk '/Scan this QR code with your WhatsApp app:/{flag=1; next} /^$/{if(flag) exit} flag' bridge.log
+            echo ""
+            echo "=========================================="
+            echo "If QR code doesn't appear above, check: cat bridge.log"
+            echo "=========================================="
+        else
+            print_warning "Log file not found, check bridge.log manually"
+        fi
     else
         print_error "Failed to start WhatsApp Bridge"
         return 1
@@ -58,7 +88,7 @@ start_bridge() {
 
 # Function to start MCP Server
 start_mcp() {
-    if is_running "main.py"; then
+    if is_mcp_running; then
         print_warning "MCP Server is already running"
         return 0
     fi
@@ -69,7 +99,7 @@ start_mcp() {
     cd ..
     
     sleep 2
-    if is_running "main.py"; then
+    if is_mcp_running; then
         print_success "MCP Server started successfully"
         print_status "Check mcp.log for status"
     else
@@ -82,15 +112,42 @@ start_mcp() {
 stop_all() {
     print_status "Stopping all services..."
     
-    if is_running "main"; then
-        pkill -f "main" && print_success "WhatsApp Bridge stopped"
+    if is_bridge_running; then
+        pkill -f "whatsapp-bridge.*main" && print_success "WhatsApp Bridge stopped"
     fi
     
-    if is_running "main.py"; then
-        pkill -f "main.py" && print_success "MCP Server stopped"
+    if is_mcp_running; then
+        pkill -f "whatsapp-mcp-server.*main.py" && print_success "MCP Server stopped"
     fi
     
     print_success "All services stopped"
+}
+
+# Function to force kill all processes
+force_kill_all() {
+    print_status "Force killing all WhatsApp MCP processes..."
+    
+    # Kill WhatsApp Bridge processes
+    if pgrep -f "whatsapp-bridge.*main" > /dev/null; then
+        pkill -9 -f "whatsapp-bridge.*main" && print_success "WhatsApp Bridge force killed"
+    fi
+    
+    # Kill MCP Server processes
+    if pgrep -f "whatsapp-mcp-server.*main.py" > /dev/null; then
+        pkill -9 -f "whatsapp-mcp-server.*main.py" && print_success "MCP Server force killed"
+    fi
+    
+    # Kill any remaining main processes
+    if pgrep -f "./main" > /dev/null; then
+        pkill -9 -f "./main" && print_success "Remaining main processes killed"
+    fi
+    
+    # Kill any remaining main.py processes
+    if pgrep -f "main.py" > /dev/null; then
+        pkill -9 -f "main.py" && print_success "Remaining main.py processes killed"
+    fi
+    
+    print_success "All processes force killed"
 }
 
 # Function to show status
@@ -99,13 +156,13 @@ show_status() {
     echo "WhatsApp MCP Server Status"
     echo "=========================================="
     
-    if is_running "main"; then
+    if is_bridge_running; then
         print_success "WhatsApp Bridge: RUNNING"
     else
         print_error "WhatsApp Bridge: NOT RUNNING"
     fi
     
-    if is_running "main.py"; then
+    if is_mcp_running; then
         print_success "MCP Server: RUNNING"
     else
         print_error "MCP Server: NOT RUNNING"
@@ -116,6 +173,32 @@ show_status() {
     echo "- Bridge: bridge.log"
     echo "- MCP Server: mcp.log"
     echo ""
+}
+
+# Function to show QR code
+show_qr_code() {
+    echo "=========================================="
+    echo "WhatsApp QR Code"
+    echo "=========================================="
+    
+    if [[ -f "bridge.log" ]]; then
+        # Look for QR code in the log
+        if grep -q "Scan this QR code" bridge.log; then
+            echo ""
+            echo "WHATSAPP QR CODE - SCAN WITH YOUR PHONE"
+            echo ""
+            # Extract QR code from log file
+            awk '/Scan this QR code with your WhatsApp app:/{flag=1; next} /^$/{if(flag) exit} flag' bridge.log
+            echo ""
+            echo "=========================================="
+        else
+            print_warning "QR code not found in log. Bridge may still be starting..."
+            print_status "Showing recent bridge log:"
+            tail -10 bridge.log
+        fi
+    else
+        print_error "Bridge log not found. Start the bridge first."
+    fi
 }
 
 # Function to show logs
@@ -147,10 +230,12 @@ show_menu() {
     echo "2. Start MCP Server"
     echo "3. Start Both Services"
     echo "4. Stop All Services"
-    echo "5. Show Status"
-    echo "6. Show Logs"
-    echo "7. Install/Update Dependencies"
-    echo "8. Exit"
+    echo "5. Force Kill All Processes"
+    echo "6. Show Status"
+    echo "7. Show QR Code"
+    echo "8. Show Logs"
+    echo "9. Install/Update Dependencies"
+    echo "10. Exit"
     echo ""
 }
 
@@ -158,7 +243,7 @@ show_menu() {
 main() {
     while true; do
         show_menu
-        read -p "Choose an option (1-8): " choice
+        read -p "Choose an option (1-10): " choice
         
         case $choice in
             1)
@@ -175,21 +260,27 @@ main() {
                 stop_all
                 ;;
             5)
-                show_status
+                force_kill_all
                 ;;
             6)
-                show_logs
+                show_status
                 ;;
             7)
+                show_qr_code
+                ;;
+            8)
+                show_logs
+                ;;
+            9)
                 print_status "Running installation script..."
                 ./install.sh
                 ;;
-            8)
+            10)
                 print_status "Goodbye!"
                 exit 0
                 ;;
             *)
-                print_error "Invalid option. Please choose 1-8."
+                print_error "Invalid option. Please choose 1-10."
                 ;;
         esac
         
@@ -203,6 +294,18 @@ main() {
 if [[ ! -f "whatsapp-bridge/main.go" ]] || [[ ! -f "whatsapp-mcp-server/main.py" ]]; then
     print_error "Please run this script from the WhatsApp MCP project root directory"
     exit 1
+fi
+
+# Check for command line arguments
+if [[ "$1" == "kill" ]]; then
+    force_kill_all
+    exit 0
+elif [[ "$1" == "status" ]]; then
+    show_status
+    exit 0
+elif [[ "$1" == "qr" ]]; then
+    show_qr_code
+    exit 0
 fi
 
 # Run main function
