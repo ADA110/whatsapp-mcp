@@ -238,6 +238,10 @@ By default, just the metadata of the media is stored in the local database. The 
   curl -LsSf https://astral.sh/uv/install.sh | sh
   ```
   Then restart your terminal or run `source ~/.cargo/env` to add UV to your PATH.
+- **UV Command Not Found**: If you get "uv: command not found" after installation, the installer automatically adds UV to your shell profile files, but you may need to:
+  - Restart your terminal, OR
+  - Run `source ~/.cargo/env` in your current terminal session
+  - The installer will use the full path to UV (`~/.cargo/bin/uv`) in the configuration as a fallback
 - Make sure both the Go application and the Python server are running for the integration to work properly.
 
 ### Authentication Issues

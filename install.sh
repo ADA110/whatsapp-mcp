@@ -175,17 +175,36 @@ install_uv() {
     # Install UV using the official installer
     curl -LsSf https://astral.sh/uv/install.sh | sh
     
-    # Add UV to PATH
+    # Add UV to PATH for current session
     if [[ -f "$HOME/.cargo/env" ]]; then
         source "$HOME/.cargo/env"
+        export PATH="$HOME/.cargo/bin:$PATH"
+    fi
+    
+    # Add UV to shell profile files for future sessions
+    if [[ -f "$HOME/.cargo/env" ]]; then
+        # Add to .bashrc if it exists
+        if [[ -f "$HOME/.bashrc" ]] && ! grep -q "source.*cargo/env" "$HOME/.bashrc"; then
+            echo 'source "$HOME/.cargo/env"' >> "$HOME/.bashrc"
+        fi
+        
+        # Add to .zshrc if it exists
+        if [[ -f "$HOME/.zshrc" ]] && ! grep -q "source.*cargo/env" "$HOME/.zshrc"; then
+            echo 'source "$HOME/.cargo/env"' >> "$HOME/.zshrc"
+        fi
+        
+        # Add to .profile as fallback
+        if [[ -f "$HOME/.profile" ]] && ! grep -q "source.*cargo/env" "$HOME/.profile"; then
+            echo 'source "$HOME/.cargo/env"' >> "$HOME/.profile"
+        fi
     fi
     
     # Verify installation
     if command_exists uv; then
         print_success "UV installed successfully"
     else
-        print_error "UV installation failed. Please install manually: https://docs.astral.sh/uv/getting-started/installation/"
-        exit 1
+        print_warning "UV installed but not found in PATH. Using full path: $HOME/.cargo/bin/uv"
+        print_status "You may need to restart your terminal or run: source ~/.cargo/env"
     fi
 }
 
