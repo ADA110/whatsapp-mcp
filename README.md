@@ -22,7 +22,7 @@ For the easiest setup, use our automated installer:
 
 **macOS and Linux:**
 ```bash
-git clone https://github.com/lharries/whatsapp-mcp.git
+git clone https://github.com/ADA110/whatsapp-mcp.git
 cd whatsapp-mcp
 chmod +x install.sh
 ./install.sh
@@ -63,7 +63,7 @@ If you prefer to install manually or the automated installer doesn't work:
 1. **Clone this repository**
 
    ```bash
-   git clone https://github.com/lharries/whatsapp-mcp.git
+   git clone https://github.com/ADA110/whatsapp-mcp.git
    cd whatsapp-mcp
    ```
 

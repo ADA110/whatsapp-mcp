@@ -157,7 +157,7 @@ The launcher provides a simple menu interface:
 ### Quick Start
 ```bash
 # Clone the repository
-git clone https://github.com/lharries/whatsapp-mcp.git
+git clone https://github.com/ADA110/whatsapp-mcp.git
 cd whatsapp-mcp
 
 # Run the installer
